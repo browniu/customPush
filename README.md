@@ -1,6 +1,6 @@
 # customPush
 
-> 网络任意信息定制化推送服务
+> 任意网络信息定制化推送服务
 
  [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
