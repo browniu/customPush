@@ -1,6 +1,6 @@
 module.exports = [{
     title: '实时天气',
-    url:'https://www.baidu.com/',
+    url: 'https://www.baidu.com/',
     target: 'https://api.day.app/NmAByzvdmM8EfTtNsYMGEo/',
     interval: 5,
     tempLength: 3,
@@ -19,9 +19,8 @@ module.exports = [{
                 rain: [...document.querySelectorAll('.op_weather4_jsml')].map(dom => dom.innerText).slice(0, 3).join('-').replace(/mm/g, '')
             },
             sub: {
-                title: '实时天气',
                 date: new Date().toString().substr(0, 24),
-                networkCheckPoint:[...document.querySelectorAll('.op_weather4_jsml')].map(dom => dom.innerText).slice(0, 3).join('-').replace(/mm/g, '')
+                networkCheckPoint: [...document.querySelectorAll('.op_weather4_jsml')].map(dom => dom.innerText).slice(0, 3).join('-').replace(/mm/g, '')
             }
         }))
     ),
@@ -29,5 +28,18 @@ module.exports = [{
         enable: true,
         label: '0-0-0'
     }
-}
-]
+}, {
+    title: '知乎',
+    url: 'https://www.zhihu.com',
+    target: 'https://api.day.app/NmAByzvdmM8EfTtNsYMGEo/',
+    interval: 10,
+    tempLength: 3,
+    step: async (page) => {
+        // await page.click('body', {delay: 5000});
+    },
+    infoFormat: (page) => {
+        page.evaluate(() => ({
+            content: document.querySelector('.SignFlowHeader-slogen').innerText
+        }))
+    }
+}]

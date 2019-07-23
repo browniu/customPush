@@ -18,7 +18,12 @@ async function getInfo() {
     await page.goto(config.url);
     await config.step(page)
 
+    // page.once('load', async () => {
+    //     console.log('loaded')
+    // });
+
     const info = await config.infoFormat(page)
+    // console.log(info)
     checkTemp(info)
     browser.close()
 
