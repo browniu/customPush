@@ -3,33 +3,22 @@ const puppeteer = require('puppeteer');
 let request = require('request');
 
 // 配置项
-const gap = 5
-let tempInfo = ''
+const configs = require('./infoConfig')
+const configIndex = 0
+const config = configs[configIndex]
+
+let tempInfo = Array.apply(null, {length: config.tempLength})
+let tempInfoIndex = 0
+
 
 // 核心-数据抓取
 async function getInfo() {
     const browser = await puppeteer.launch({headless: true});
     const page = await browser.newPage();
-    await page.goto('https://www.baidu.com/');
-    await page.focus('#kw');
-    await page.type('#kw', '天气', {delay: 100});
-    await page.click('#su', {delay: 3000});
-    await page.click('.op_weather4_xlfilter', {delay: 5000})
+    await page.goto(config.target);
+    await config.step(page)
 
-    const info = await page.evaluate(() => ({
-        content: {
-            ontime: document.querySelector('.op_weather4_twoicon_shishi_sub').innerText,
-            weather: document.querySelector('.op_weather4_twoicon_weath').innerText,
-            temp: document.querySelector('.op_weather4_twoicon_shishi_title').innerText,
-            rain: [...document.querySelectorAll('.op_weather4_jsml')].map(dom => dom.innerText).slice(0, 4).join('-').replace(/mm/g, '')
-        },
-        sub: {
-            title: '实时天气',
-            date: new Date().toString()
-        }
-
-    }))
-    // console.log(info)
+    const info = await config.infoFormat(page)
     checkTemp(info)
     browser.close()
 
@@ -43,20 +32,45 @@ function push(info, title, date) {
     let target = title ? url + title + '/' + info : url + info
     request(target, function (error, response, body) {
         if (response.statusCode === 200) {
-            console.info('发送成功', date)
+            print('r', '发送成功', date)
         }
     })
 }
 
 // 覆盖检查
 function checkTemp(info) {
-    let content = Object.values(info.content).join(' ')
-    console.log(tempInfo, content)
-    if (content === tempInfo) return
-    push(content, info.sub.title, info.sub.date)
-    tempInfo = content
+    const currInfo = Object.values(info.content).join(' ')
+    if (tempInfo.some(e => e === currInfo)) {
+        print('n', '数据未更新')
+    } else if (config.network.enable && info.sub.networkCheckPoint.match(config.network.label)) {
+        print('w', '因网络延时过高，获取数据无效')
+    } else {
+        print('c', tempInfo[tempInfoIndex], currInfo)
+        push(currInfo, config.title, info.sub.date)
+        tempInfo[tempInfoIndex] = currInfo
+        tempInfoIndex++
+        if (tempInfoIndex > config.tempLength - 1) tempInfoIndex = 0
+    }
+    console.log('tempInfo', tempInfo)
+}
+
+// 控制台输出
+function print(type, content, sub = '') {
+    switch (type) {
+        case 'r':
+            console.log('\033[42;30m DONE \033[0;32m ' + content + ' \033[0m' + sub);
+            break;
+        case 'c':
+            console.log('\033[46;30m COMP \033[0;35m ' + content + ' \033[0;31m ' + sub + ' \033[0m')
+            break;
+        case 'w':
+            console.log('\033[41;30m FIELD \033[0;31m ' + content + ' \033[0m' + sub);
+            break
+        case 'n':
+            console.log('\033[43;30m WARN \033[0;33m ' + content + ' \033[0m' + sub)
+    }
 }
 
 // 执行程序
 getInfo()
-if (gap > 0) setInterval(() => {getInfo()}, gap * 1000 * 60)
+if (config.interval) setInterval(() => {getInfo()}, config.interval * 1000 * 60)
