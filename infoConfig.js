@@ -1,7 +1,8 @@
 module.exports = [{
     title: '实时天气',
-    target: 'https://www.baidu.com/',
-    interval: 1,
+    url:'https://www.baidu.com/',
+    target: 'https://api.day.app/NmAByzvdmM8EfTtNsYMGEo/',
+    interval: 5,
     tempLength: 3,
     step: async (page) => {
         await page.focus('#kw');

@@ -15,7 +15,7 @@ let tempInfoIndex = 0
 async function getInfo() {
     const browser = await puppeteer.launch({headless: true});
     const page = await browser.newPage();
-    await page.goto(config.target);
+    await page.goto(config.url);
     await config.step(page)
 
     const info = await config.infoFormat(page)
@@ -26,11 +26,11 @@ async function getInfo() {
 
 // 核心-消息推送
 function push(info, title, date) {
-    let url = 'https://api.day.app/NmAByzvdmM8EfTtNsYMGEo/'
+    let url = config.target
     if (title) title = encodeURI(title)
     info = encodeURI(info) || 'xixi'
     let target = title ? url + title + '/' + info : url + info
-    request(target, function (error, response, body) {
+    request(target, function (error, response) {
         if (response.statusCode === 200) {
             print('r', '发送成功', date)
         }
@@ -43,7 +43,7 @@ function checkTemp(info) {
     if (tempInfo.some(e => e === currInfo)) {
         print('n', '数据未更新')
     } else if (config.network.enable && info.sub.networkCheckPoint.match(config.network.label)) {
-        print('w', '因网络延时过高，获取数据无效')
+        print('w', '因网络延时过高，本次获取的数据无效')
     } else {
         print('c', tempInfo[tempInfoIndex], currInfo)
         push(currInfo, config.title, info.sub.date)
