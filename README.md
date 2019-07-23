@@ -60,8 +60,8 @@ module.exports = [{
 
 ## Requirements
 
-[Bark](https://github.com/Finb/Bark) 推送客户端
-[Puppeteer](https://github.com/GoogleChrome/puppeteer) 脚本浏览器
+* [Bark](https://github.com/Finb/Bark) 推送客户端
+* [Puppeteer](https://github.com/GoogleChrome/puppeteer) 脚本浏览器
 
 ## Update
 
