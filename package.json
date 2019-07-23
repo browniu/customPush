@@ -9,6 +9,7 @@
   "author": "browniu",
   "license": "MIT",
   "dependencies": {
-    "puppeteer": "^1.18.1"
+    "puppeteer": "^1.18.1",
+    "request": "^2.88.0"
   }
 }
