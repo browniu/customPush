@@ -10,7 +10,6 @@ const config = configs[configIndex]
 let tempInfo = Array.apply(null, {length: config.tempLength})
 let tempInfoIndex = 0
 
-
 // 核心-数据抓取
 async function getInfo() {
     const browser = await puppeteer.launch({headless: true});
@@ -22,8 +21,6 @@ async function getInfo() {
         checkTemp(info)
         browser.close()
     }, config.delay * 1000)
-
-
 }
 
 // 核心-消息推送

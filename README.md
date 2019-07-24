@@ -12,13 +12,24 @@ git clone https://github.com/browniu/customPush.git && npm i && node index.js
 
 ## Config
 
+```javascript
+// index.js
+//...
+const configIndex = 1
+//...
+```
+
+
+
 ```jsx
 // infoConfig.js
 module.exports = [{
     title: '实时天气',
-    target: 'https://www.baidu.com/',
+    url: 'https://www.baidu.com/',
+    target: 'https://api.day.app/NmAByzvdmM8EfTtNsYMGEo/',
     interval: 5,
     tempLength: 3,
+    delay: 0,
     step: async (page) => {
         await page.focus('#kw');
         await page.type('#kw', '天气', {delay: 100});
@@ -34,9 +45,8 @@ module.exports = [{
                 rain: [...document.querySelectorAll('.op_weather4_jsml')].map(dom => dom.innerText).slice(0, 3).join('-').replace(/mm/g, '')
             },
             sub: {
-                title: '实时天气',
                 date: new Date().toString().substr(0, 24),
-                networkCheckPoint:[...document.querySelectorAll('.op_weather4_jsml')].map(dom => dom.innerText).slice(0, 3).join('-').replace(/mm/g, '')
+                networkCheckPoint: [...document.querySelectorAll('.op_weather4_jsml')].map(dom => dom.innerText).slice(0, 3).join('-').replace(/mm/g, '')
             }
         }))
     ),
@@ -44,7 +54,30 @@ module.exports = [{
         enable: true,
         label: '0-0-0'
     }
+}, {
+    title: '微博话题',
+    url: 'https://weibo.com/a/hot/realtime',
+    target: 'https://api.day.app/NmAByzvdmM8EfTtNsYMGEo/',
+    interval: 10,
+    tempLength: 3,
+    delay: 10,
+    step: async (page) => {},
+    infoFormat: (page) => (
+        page.evaluate(() => ({
+            content: {
+                top: document.querySelectorAll('.UG_list_c .S_txt1')[0].innerText
+            },
+            sub: {
+                date: new Date().toString().substr(0, 24),
+                networkCheckPoint: null
+            }
+        }))
+    ),
+    network: {
+        enable: false
+    }
 }]
+
 ```
 
 | Keys       | Description            |

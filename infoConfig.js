@@ -34,7 +34,7 @@ module.exports = [{
     url: 'https://weibo.com/a/hot/realtime',
     target: 'https://api.day.app/NmAByzvdmM8EfTtNsYMGEo/',
     interval: 10,
-    tempLength: 3,
+    tempLength: 5,
     delay: 10,
     step: async (page) => {},
     infoFormat: (page) => (
