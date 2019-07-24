@@ -80,16 +80,17 @@ module.exports = [{
 
 ```
 
-| Keys       | Description            |
-| ---------- | ---------------------- |
-| title      | 推送标题               |
-| target     | 推送目标服务器         |
-| url        | 获取信息的目标站点地址 |
-| interval   | 信息检索间隔(min)      |
-| tempLength | 查重库容量             |
-| step       | 页面操作步骤           |
-| infoFormat | 信息内容格式           |
-| network    | 网络延迟判断标示       |
+| Keys       | Description                |
+| ---------- | -------------------------- |
+| title      | 推送标题                   |
+| target     | 推送目标服务器             |
+| url        | 获取信息的目标站点地址     |
+| interval   | 信息检索间隔(min)          |
+| tempLength | 查重库容量                 |
+| step       | 页面操作步骤               |
+| infoFormat | 信息内容格式               |
+| network    | 网络延迟判断标示           |
+| delay      | 执行页面操作步骤后延迟时间 |
 
 ## Requirements
 
