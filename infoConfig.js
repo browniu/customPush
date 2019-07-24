@@ -4,6 +4,7 @@ module.exports = [{
     target: 'https://api.day.app/NmAByzvdmM8EfTtNsYMGEo/',
     interval: 5,
     tempLength: 3,
+    delay: 0,
     step: async (page) => {
         await page.focus('#kw');
         await page.type('#kw', '天气', {delay: 100});
@@ -29,17 +30,25 @@ module.exports = [{
         label: '0-0-0'
     }
 }, {
-    title: '知乎',
-    url: 'https://www.zhihu.com',
+    title: '微博话题',
+    url: 'https://weibo.com/a/hot/realtime',
     target: 'https://api.day.app/NmAByzvdmM8EfTtNsYMGEo/',
     interval: 10,
     tempLength: 3,
-    step: async (page) => {
-        // await page.click('body', {delay: 5000});
-    },
-    infoFormat: (page) => {
+    delay: 10,
+    step: async (page) => {},
+    infoFormat: (page) => (
         page.evaluate(() => ({
-            content: document.querySelector('.SignFlowHeader-slogen').innerText
+            content: {
+                top: document.querySelectorAll('.UG_list_c .S_txt1')[0].innerText
+            },
+            sub: {
+                date: new Date().toString().substr(0, 24),
+                networkCheckPoint: null
+            }
         }))
+    ),
+    network: {
+        enable: false
     }
 }]

@@ -4,7 +4,7 @@ let request = require('request');
 
 // 配置项
 const configs = require('./infoConfig')
-const configIndex = 0
+const configIndex = 1
 const config = configs[configIndex]
 
 let tempInfo = Array.apply(null, {length: config.tempLength})
@@ -17,15 +17,12 @@ async function getInfo() {
     const page = await browser.newPage();
     await page.goto(config.url);
     await config.step(page)
+    setTimeout(async () => {
+        const info = await config.infoFormat(page)
+        checkTemp(info)
+        browser.close()
+    }, config.delay * 1000)
 
-    // page.once('load', async () => {
-    //     console.log('loaded')
-    // });
-
-    const info = await config.infoFormat(page)
-    // console.log(info)
-    checkTemp(info)
-    browser.close()
 
 }
 
@@ -33,7 +30,7 @@ async function getInfo() {
 function push(info, title, date) {
     let url = config.target
     if (title) title = encodeURI(title)
-    info = encodeURI(info) || 'xixi'
+    info = encodeURI(info).replace(/#/g,'') || 'xixi'
     let target = title ? url + title + '/' + info : url + info
     request(target, function (error, response) {
         if (response.statusCode === 200) {
@@ -56,7 +53,6 @@ function checkTemp(info) {
         tempInfoIndex++
         if (tempInfoIndex > config.tempLength - 1) tempInfoIndex = 0
     }
-    console.log('tempInfo', tempInfo)
 }
 
 // 控制台输出
